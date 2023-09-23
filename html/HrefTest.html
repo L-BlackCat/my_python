@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Query HREF</title>
+</head>
+<body>
+<p>
+    <a href="F:\my_project\my_python\html\firstText.html">本文本</a> 是一个指向本网站中的一个页面的链接。</p>
+
+<p><a href="http://www.microsoft.com/">本文本</a> 是一个指向万维网上的页面的链接。</p>
+<hr>
+<input id="usernameInput" type="text" name="username" value="请输入名称">
+<button id="getuserName" onclick="getUserName()">获取用户名</button>
+<p id = "print_user_name"></p>
+<script>
+    function getUserName(){
+        let inputElement = document.getElementById("usernameInput");
+
+        let username = inputElement.value;
+
+        console.log("username : " + username)
+        let resultParagraph = document.getElementById("print_user_name")
+
+        resultParagraph.textContent = username;
+        return username
+    }
+
+</script>
+
+<a id="tips">有用的提示部分<br></a>
+
+<a href="https://www.runoob.com/" target="_blank" rel="noopener noreferrer">访问菜鸟教程!</a>
+<br>
+
+<a href="https://www.example.com" title="前往示例网站" target="_blank">#点击这里访问示例网站(重新开一个窗口)</a>
+<hr>
+<a href="#section2">跳转到第二部分</a>
+<a href="document.pdf" download>下载文档</a>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<!-- 在页面中的某个位置 -->
+<a name="section2" >
+<img src="C:\Users\81908\Desktop\淘宝\新中式-水墨连衣裙\拼接图.jpg" width="288" height= "400" >
+</a>
+
+<br>
+
+<a href="#tips">访问有用的提示部分<br></a>
+
+<a href="https://www.runoob.com/html/html-links.html#tips">
+    访问有用的提示部分<br></a>
+</body>
+</html>
