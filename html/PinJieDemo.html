@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.5.0-beta4/html2canvas.min.js"></script>
+  <title>HTML to JPEG</title>
+</head>
   <style>
     .canvas {
       position: relative;
@@ -101,8 +104,10 @@
 <body>
 <div class="canvas">
   <div class="image-container">
-    <img src="C:\Users\81908\Desktop\淘宝\新中式-水墨连衣裙\主图配图1.jpg" alt="图片1">
-      <img src="C:\Users\81908\Desktop\淘宝\新中式-水墨连衣裙\主图配图jpg.jpg" alt="图片2">
+<!--    <img src="C://Users//81908//Desktop//淘宝//新中式-水墨连衣裙//主图配图1.jpg" alt="图片1">-->
+<!--      <img src="C://Users//81908//Desktop//淘宝//新中式-水墨连衣裙//主图配图jpg.jpg" alt="图片2">-->
+    <img src="resource/主图配图1.jpg" alt="图片1">
+    <img src="resource/主图配图jpg.jpg" alt="图片2">
       <div class="text-overlay">
         <p>华裳诗韵</p>
       </div>
@@ -122,5 +127,33 @@
   </div>
 
 </div>
+<button id="downloadButton">下载界面</button>
+<script >
+  document.getElementById('downloadButton').addEventListener('click', function() {
+    var htmlElement = document.querySelector('.image-container');
+
+    // 使用HTML2Canvas库将HTML元素转换为图像
+    html2canvas(htmlElement).then(function(canvas) {
+      try {
+        // 将图像数据转换为JPEG格式的数据URL
+        var dataURL = canvas.toDataURL('image/jpeg');
+
+        // 创建一个临时链接，用于触发下载
+        var a = document.createElement('a')
+        a.href = dataURL;
+        a.download = 'downloaded_page.jpg'; // 设置文件名为.jpg
+
+        // 模拟点击触发下载
+        a.click();
+      } catch (error) {
+        console.error('转换和下载失败：', error);
+      }
+    }).catch(function(error) {
+      console.error('HTML2Canvas 转换失败：', error);
+    });
+  });
+
+</script>
+
 </body>
 </html>
