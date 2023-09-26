@@ -75,7 +75,7 @@ print('helloworld123'.isalnum())
 
 
 print('')
-print('isalnum()')
+print('isdecimal()')
 print('helloworld'.isdecimal())
 print('hello world123'.isdecimal())
 print('helloworld123'.isdecimal())
