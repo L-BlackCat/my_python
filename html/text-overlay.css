@@ -1,0 +1,10 @@
+.text-overlay {
+    position: absolute; /* 绝对定位，使文本层覆盖图片2 */
+    top: 0; /* 位于图片2的顶部 */
+    left: 0; /* 位于图片2的左侧 */
+    width: 100%; /* 占据整个容器的宽度 */
+    text-align: center; /* 文本居中 */
+    background-color: rgba(0, 0, 0, 0.7); /* 文本背景色，可以根据需要调整透明度和颜色 */
+    color: white; /* 文本颜色 */
+    padding: 10px; /* 文本内边距，可以根据需要调整 */
+}

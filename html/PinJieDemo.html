@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.5.0-beta4/html2canvas.min.js"></script>
+  <title>HTML to JPEG</title>
+</head>
+  <style>
+    .canvas {
+      position: relative;
+      width: 800px;
+      height: 800px;
+    }
+
+    .image-container {
+      display: flex;
+    }
+
+    .image-container img {
+      height: 100%; /* 保持原始宽高比例 */
+    }
+
+    .text-overlay {
+      position: absolute;
+      top: 100px; /* 将文本垂直居中 */
+      left: 505px;
+      right: 5px;
+      /*width:270px;*/
+      /*height:100px;*/
+      text-align: center; /* 文本居中 */
+      background-color: rgba(0, 0, 0, 0.7); /* 背景颜色和透明度 */
+      color: black; /* 文字颜色 */
+      background: white;
+      padding: 0px 0px 5px 5px ; /* 文字内边距 */
+      font-family: "苏新诗毛糙体简", sans-serif; /* 使用楷体字体 */
+      font-size: 60px;
+      transform: translateY(-50%); /* 修正文本垂直居中 */
+    }
+
+    .text-englishName {
+      position: absolute;
+      top: 165px; /* 将文本垂直居中 */
+      left: 505px;
+      right: 5px;
+      /*width:280px;*/
+      text-align: center; /* 文本居中 */
+      background-color: rgba(0, 0, 0, 0.7); /* 背景颜色和透明度 */
+      color: black; /* 文字颜色 */
+      background: white;
+      padding: 0px 0px 5px 5px ; /* 文字内边距 */
+      font-family: "楷体", sans-serif; /* 使用楷体字体 */
+      font-size: 14px;
+      transform: translateY(-50%); /* 修正文本垂直居中 */
+    }
+    .text-ChineseXinpin {
+      position: absolute;
+      top: 640px; /* 将文本垂直居中 */
+      left: 505px;
+      right: 5px;
+      /*width:280px;*/
+      text-align: center; /* 文本居中 */
+      background-color: rgba(0, 0, 0, 0.7); /* 背景颜色和透明度 */
+      color: black; /* 文字颜色 */
+      background: white;
+      padding: 0px 0px 5px 5px ; /* 文字内边距 */
+      font-family: "楷体", sans-serif; /* 使用楷体字体 */
+      font-size: 21px;
+      transform: translateY(-50%); /* 修正文本垂直居中 */
+    }
+    .text-NewChineseStyle {
+      position: absolute;
+      top: 680px; /* 将文本垂直居中 */
+      left: 505px;
+      right: 5px;
+      /*width:280px;*/
+      text-align: center; /* 文本居中 */
+      background-color: rgba(0, 0, 0, 0.7); /* 背景颜色和透明度 */
+      color: black; /* 文字颜色 */
+      background: white;
+      padding: 0px 0px 5px 5px ; /* 文字内边距 */
+      font-family: "楷体", sans-serif; /* 使用楷体字体 */
+      font-size: 16px;
+      transform: translateY(-50%); /* 修正文本垂直居中 */
+    }
+    .text-englishTitle {
+      position: absolute;
+      top: 720px; /* 将文本垂直居中 */
+      left: 505px;
+      right: 5px;
+      /*width:280px;*/
+      text-align: center; /* 文本居中 */
+      background-color: rgba(0, 0, 0, 0.7); /* 背景颜色和透明度 */
+      color: black; /* 文字颜色 */
+      background: white;
+      padding: 0px 0px 5px 5px ; /* 文字内边距 */
+      font-family: "楷体", sans-serif; /* 使用楷体字体 */
+      font-size: 12px;
+      transform: translateY(-50%); /* 修正文本垂直居中 */
+    }
+  </style>
+  <title>图片拼接</title>
+</head>
+<body>
+<div class="canvas">
+  <div class="image-container">
+<!--    <img src="C://Users//81908//Desktop//淘宝//新中式-水墨连衣裙//主图配图1.jpg" alt="图片1">-->
+<!--      <img src="C://Users//81908//Desktop//淘宝//新中式-水墨连衣裙//主图配图jpg.jpg" alt="图片2">-->
+    <img src="resource/主图配图1.jpg" alt="图片1">
+    <img src="resource/主图配图jpg.jpg" alt="图片2">
+      <div class="text-overlay">
+        <p>华裳诗韵</p>
+      </div>
+      <div class="text-englishName">
+        <p>—— · SCALLOPED HEM SKIPT · ——</p>
+      </div>
+    <div class="text-ChineseXinpin">
+      <p>华裳诗韵 # 新品上新 #</p>
+    </div>
+    <div class="text-NewChineseStyle">
+      <p>NEW CHINESE STYLE</p>
+    </div>
+    <div class="text-englishTitle">
+      <p>CHINESE CHIC,TRADITINAL CHARM,FREE FRONT</p>
+    </div>
+    </div>
+  </div>
+
+</div>
+<button id="downloadButton">下载界面</button>
+<script >
+  document.getElementById('downloadButton').addEventListener('click', function() {
+    var htmlElement = document.querySelector('.image-container');
+
+    // 使用HTML2Canvas库将HTML元素转换为图像
+    html2canvas(htmlElement).then(function(canvas) {
+      try {
+        // 将图像数据转换为JPEG格式的数据URL
+        var dataURL = canvas.toDataURL('image/jpeg');
+
+        // 创建一个临时链接，用于触发下载
+        var a = document.createElement('a')
+        a.href = dataURL;
+        a.download = 'downloaded_page.jpg'; // 设置文件名为.jpg
+
+        // 模拟点击触发下载
+        a.click();
+      } catch (error) {
+        console.error('转换和下载失败：', error);
+      }
+    }).catch(function(error) {
+      console.error('HTML2Canvas 转换失败：', error);
+    });
+  });
+
+</script>
+
+</body>
+</html>
