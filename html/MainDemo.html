@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>图像编辑器</title>
+    <style>
+        /* 样式代码，用于界面布局 */
+        #container {
+            text-align: center;
+        }
+
+        #editor {
+            border: 2px solid #ccc;
+            display: inline-block;
+            margin: 10px;
+            padding: 10px;
+        }
+
+        /* 添加样式用于预览图像 */
+        #imagePreview {
+            border: 2px solid #ccc;
+            margin: 10px;
+            max-width: 100%;
+        }
+
+        /* 添加样式用于调节图像大小 */
+        #imageSizeInput {
+            width: 100px;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+<div id="container">
+    <h1>图像编辑器</h1>
+
+    <!-- 图像上传表单 -->
+    <input type="file" id="imageInput" accept="image/*">
+    <br><br>
+
+    <!-- 图像编辑工具 -->
+    <div id="editor">
+        <h2>编辑工具</h2>
+        <label for="imageSizeInput">图像大小：</label>
+        <input type="number" id="imageSizeInput" min="1" value="100">
+        <button onclick="resizeImage()">调整大小</button>
+        <button onclick="adjustBrightness()">调整亮度</button>
+        <button onclick="adjustContrast()">调整对比度</button>
+        <button onclick="applyFilter()">应用滤镜</button>
+        <button onclick="removeBackground()">一键抠图</button>
+        <button onclick="resetImage()">重置图像</button>
+        <label for="textInput">文本内容：</label>
+        <input type="text" id="textInput" placeholder="在此输入文本">
+        <label for="textSizeInput">文字大小：</label>
+        <input type="number" id="textSizeInput" min="1" value="16">
+        <label for="fontSelect">选择字体：</label>
+        <select id="fontSelect">
+            <option value="Arial">Arial</option>
+            <option value="Times New Roman">Times New Roman</option>
+            <!-- 添加更多字体选项 -->
+        </select>
+        <button onclick="addText()">添加文本</button>
+        >
+    </div>
+
+    <!-- 图像预览和Canvas -->
+    <div>
+        <canvas id="canvas" width="400" height="300"></canvas>
+    </div>
+
+    <!-- 添加预览图像 -->
+    <div>
+        <h2>图像预览</h2>
+        <img id="imagePreview" src="" alt="图像预览">
+    </div>
+</div>
+
+<script>
+    // 获取HTML元素
+    var imageInput = document.getElementById('imageInput');
+    var canvas = document.getElementById('canvas');
+    var ctx = canvas.getContext('2d');
+    var imagePreview = document.getElementById('imagePreview');
+    var imageSizeInput = document.getElementById('imageSizeInput');
+    var image = new Image();
+
+    // 图像上传功能
+    imageInput.addEventListener('change', function () {
+        var file = imageInput.files[0];
+        if (file) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                image.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // 图像加载完成后显示在Canvas上和预览
+    image.onload = function () {
+        ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+        imagePreview.src = image.src; // 设置预览图像
+    };
+
+    // 图像编辑工具示例（这里只是示例，实际功能需自行实现）
+    function resizeImage() {
+        var newSize = parseInt(imageSizeInput.value, 10);
+        var aspectRatio = image.width / image.height;
+        var newWidth = newSize;
+        var newHeight = newSize / aspectRatio;
+        canvas.width = newWidth;
+        canvas.height = newHeight;
+        ctx.drawImage(image, 0, 0, newWidth, newHeight);
+        imagePreview.src = canvas.toDataURL('image/jpeg');
+    }
+
+    function adjustBrightness() {
+        // 实现调整亮度的功能，可以修改图像像素数据
+        var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        var data = imageData.data;
+        var adjustment = 50; // 调整亮度的值
+
+        for (var i = 0; i < data.length; i += 4) {
+            data[i] += adjustment; // 调整红色通道
+            data[i + 1] += adjustment; // 调整绿色通道
+            data[i + 2] += adjustment; // 调整蓝色通道
+        }
+
+        ctx.putImageData(imageData, 0, 0);
+        imagePreview.src = canvas.toDataURL('image/jpeg');
+    }
+
+    function adjustContrast() {
+        // 实现调整对比度的功能，可以修改图像像素数据
+        var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        var data = imageData.data;
+        var factor = 1.5; // 调整对比度的倍数
+
+        for (var i = 0; i < data.length; i += 4) {
+            data[i] = (data[i] - 128) * factor + 128; // 调整红色通道
+            data[i + 1] = (data[i + 1] - 128) * factor + 128; // 调整绿色通道
+            data[i + 2] = (data[i + 2] - 128) * factor + 128; // 调整蓝色通道
+        }
+
+        ctx.putImageData(imageData, 0, 0);
+        imagePreview.src = canvas.toDataURL('image/jpeg');
+    }
+
+    function applyFilter() {
+        // 实现应用滤镜的功能，可以修改图像像素数据
+        var filterType = "grayscale"; // 可以根据用户选择的滤镜类型来修改
+
+        if (filterType === "grayscale") {
+            ctx.filter = "grayscale(100%)";
+        } else if (filterType === "sepia") {
+            ctx.filter = "sepia(100%)";
+        } // 添加更多滤镜类型
+
+        ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+        ctx.filter = "none"; // 恢复默认滤镜
+        imagePreview.src = canvas.toDataURL('image/jpeg');
+    }
+
+    function removeBackground() {
+        // 实现一键抠图的功能，可以将背景透明化
+        var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        var data = imageData.data;
+        var threshold = 200; // 阈值，用于确定背景像素
+
+        for (var i = 0; i < data.length; i += 4) {
+            var brightness = (data[i] + data[i + 1] + data[i + 2]) / 3;
+            if (brightness > threshold) {
+                data[i + 3] = 0; // 设置透明度为0，将背景变为透明
+            }
+        }
+
+        ctx.putImageData(imageData, 0, 0);
+        imagePreview.src = canvas.toDataURL('image/jpeg');
+    }
+    function addText() {
+        var textInput = document.getElementById('textInput').value;
+        var textSize = parseInt(document.getElementById('textSizeInput').value, 10);
+        var font = document.getElementById('fontSelect').value;
+
+        ctx.font = textSize + 'px ' + font; // 设置字体大小和字体类型
+        ctx.fillText(textInput, 50, 50); // 在Canvas上绘制文本，以(50, 50)为起点
+        imagePreview.src = canvas.toDataURL('image/jpeg'); // 更新预览图像
+    }
+
+
+    function resetImage() {
+        // 重置图像到原始状态
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+        imagePreview.src = image.src; // 更新预览图像
+    }
+</script>
+</body>
+</html>

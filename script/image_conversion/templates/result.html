@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Conversion Result</title>
+</head>
+<body>
+<h1>Conversion Result</h1>
+{% if converted_image %}
+<a href="{{ url_for('download', filename=filename, format=format) }}" download="converted_image.{{ format }}">Download {{ format|upper }}</a><br>
+<img src="data:image/{{ format }};base64,{{ converted_image|b64encode }}" alt="{{ format|upper }}">
+{% else %}
+<p>No images to display.</p>
+{% endif %}
+</body>
+</html>

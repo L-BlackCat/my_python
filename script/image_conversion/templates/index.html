@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>图片转换</title>
+    <style>
+        /* 添加样式以创建弧度的矩形框 */
+        .upload-container {
+            width: 800px;
+            height: 300px;
+            background-color: #f0f0f0; /* 背景颜色 */
+            border-radius: 20px; /* 弧度 */
+            text-align: center;
+            padding: 20px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* 自定义文件上传按钮的样式 */
+        .custom-file-upload {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff; /* 按钮背景颜色 */
+            color: #fff; /* 按钮文本颜色 */
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* 隐藏默认文件上传按钮 */
+        input[type="file"] {
+            display: none;
+        }
+
+        /* 显示上传的文件名 */
+        #file-name {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        /* 显示上传中状态 */
+        #upload-status {
+            display: none;
+            margin-top: 10px;
+        }
+
+        /* 方框样式 */
+        .format-container {
+            width: 60%;
+            border: 2px solid #007bff;
+            border-radius: 5px;
+            padding: 10px;
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* 下拉框样式 */
+        select {
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+
+        /* 转换按钮样式 */
+        #convert-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #007bff; /* 按钮背景颜色 */
+            color: #fff; /* 按钮文本颜色 */
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<h1>图片转换</h1>
+<div class="upload-container">
+    <label for="file" class="custom-file-upload">Choose an image file</label>
+    <input type="file" id="file" name="file" accept=".bmp, .jpg, .jpeg, .png, .webp">
+    <p>Supported formats: BMP, JPG, JPEG, PNG, WEBP</p>
+    <div id="file-name"></div>
+    <div id="upload-status">
+        <p>Uploading...</p>
+    </div>
+    <div class="format-container">
+        <label for="image-format">Convert to:</label>
+        <select id="image-format">
+            <option value="bmp">BMP</option>
+            <option value="jpg">JPG</option>
+            <option value="jpeg">JPEG</option>
+            <option value="png">PNG</option>
+            <option value="webp">WEBP</option>
+        </select>
+    </div>
+    <button id="convert-button">Convert and Download</button>
+</div>
+
+<script>
+    // 获取文件上传输入元素
+    const fileInput = document.getElementById('file');
+    // 获取用于显示文件名的元素
+    const fileNameDisplay = document.getElementById('file-name');
+    // 获取用于显示上传状态的元素
+    const uploadStatus = document.getElementById('upload-status');
+    // 获取转换按钮元素
+    const convertButton = document.getElementById('convert-button');
+
+    const imageFormatSelect  = document.getElementById(`image-format`);
+
+    // 添加事件监听器以更新文件名显示
+    fileInput.addEventListener('change', function () {
+        if (fileInput.files.length > 0) {
+            const fileName = fileInput.files[0].name;
+            fileNameDisplay.textContent = `Selected file: ${fileName}`;
+        }
+    });
+
+    // 添加事件监听器以在上传开始时显示上传状态
+    fileInput.addEventListener('change', function () {
+        uploadStatus.style.display = 'none'; // 隐藏上传状态
+    });
+
+    // 添加事件监听器以在文件上传时显示上传中状态
+    fileInput.addEventListener('click', function () {
+        uploadStatus.style.display = 'block'; // 显示上传中状态
+    });
+
+    // 添加事件监听器以处理转换按钮的点击
+    convertButton.addEventListener('click', function () {
+        // 在这里执行图片转换和下载的逻辑
+        // 你可以使用JavaScript发送HTTP请求到服务器以触发图片转换并下载
+        // 如果需要帮助来编写服务器端代码，请告诉我。
+        // 获取用户选择的目标格式
+        const targetFormat = imageFormatSelect.value; // 获取用户选择的转换格式
+
+        // 创建一个FormData对象，用于向服务器发送目标格式
+        const formData = new FormData();
+        formData.append('format', targetFormat);
+
+        // 发送HTTP POST请求到服务器以触发图片转换
+        fetch('/convert', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => {
+                if (response.ok) {
+                    // 如果请求成功，触发文件下载
+                    return response.blob();
+                } else {
+                    // 处理请求失败的情况
+                    alert('转换失败，请重试。');
+                }
+            })
+            .then(blob => {
+                if (blob) {
+                    // 创建一个Blob URL以便下载
+                    const url = URL.createObjectURL(blob);
+
+                    // 创建一个<a>元素用于下载
+                    const a = document.createElement('a');
+                    a.style.display = 'none';
+                    a.href = url;
+                    a.download = `converted_image.${targetFormat}`;
+
+                    // 将<a>元素添加到DOM中
+                    document.body.appendChild(a);
+
+                    // 触发下载
+                    a.click();
+
+                    // 清理Blob URL和<a>元素
+                    URL.revokeObjectURL(url);
+                    document.body.removeChild(a);
+                }
+            })
+            .catch(error => {
+                console.error('发生错误:', error);
+            });
+
+    });
+</script>
+</body>
+</html>
